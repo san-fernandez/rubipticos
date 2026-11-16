@@ -1,0 +1,7 @@
+<% content_for :title, "Inicio" %>
+
+<div class="py-4 text-center">
+  <h1 class="display-5 fw-bold">Rubípticos</h1>
+  <p class="lead col-lg-8 mx-auto"><%= @setting.welcome_text %></p>
+  <%= link_to "Jugar", new_game_path, class: "btn btn-primary btn-lg" %>
+</div>
