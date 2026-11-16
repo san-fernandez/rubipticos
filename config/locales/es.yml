@@ -1,0 +1,29 @@
+# Textos propios de la aplicación. Los de Rails (mensajes de validación,
+# fechas, números) los trae la gema rails-i18n.
+es:
+  activerecord:
+    models:
+      user:
+        one: "Usuario"
+        other: "Usuarios"
+      setting: "Configuración"
+      player:
+        one: "Jugador"
+        other: "Jugadores"
+    attributes:
+      user:
+        email_address: "Email"
+        password: "Contraseña"
+        password_confirmation: "Confirmación de contraseña"
+        role: "Rol"
+        active: "Activo"
+      setting:
+        source_url: "URL de la fuente de crípticos"
+        welcome_text: "Texto de bienvenida"
+      player:
+        name: "Nombre"
+  enums:
+    user:
+      role:
+        admin: "Administrador"
+        score_editor: "Editor de puntajes"
