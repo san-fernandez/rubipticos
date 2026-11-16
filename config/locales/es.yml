@@ -10,6 +10,12 @@ es:
       player:
         one: "Jugador"
         other: "Jugadores"
+      cryptic:
+        one: "Críptico"
+        other: "Crípticos"
+      sync_log:
+        one: "Sincronización"
+        other: "Sincronizaciones"
     attributes:
       user:
         email_address: "Email"
@@ -22,6 +28,31 @@ es:
         welcome_text: "Texto de bienvenida"
       player:
         name: "Nombre"
+      cryptic:
+        source_id: "Id de la fuente"
+        statement: "Enunciado"
+        enumeration: "Enumeración"
+        answer: "Respuesta"
+        definitions: "Definiciones"
+        indicators: "Indicadores"
+        material: "Material"
+        cryptic_type: "Tipo"
+        difficulty: "Dificultad"
+        help: "Ayuda"
+        explanation: "Explicación"
+        author: "Autor"
+        origin: "Origen"
+        active: "Activo"
+      sync_log:
+        user: "Admin"
+        version: "Versión"
+        status: "Estado"
+        created_count: "Creados"
+        updated_count: "Actualizados"
+        deactivated_count: "Desactivados"
+        rejected_count: "Rechazados"
+        rejections: "Rechazados"
+        error_message: "Error"
   enums:
     user:
       role:

@@ -1,0 +1,43 @@
+# Crípticos de ejemplo tomados del catálogo de la cátedra.
+camisa:
+  source_id: cr-013
+  statement: Mi metido en el hogar da una prenda
+  enumeration: "(6)"
+  answer: CAMISA
+  definitions: ["una prenda"]
+  indicators: ["metido en"]
+  material: ["Mi", "el hogar"]
+  cryptic_type: contenedor
+  difficulty: medio
+  help: El hogar es una palabra de cuatro letras. Partila al medio y meté MI.
+  explanation: "MI dentro de CASA (el hogar): CA + MI + SA = CAMISA."
+  author: Cátedra
+  origin: ecorrons.github.io
+
+mate:
+  source_id: cr-001
+  statement: La cama tejida esconde la infusión argentina
+  enumeration: "(4)"
+  answer: MATE
+  definitions: ["la infusión argentina"]
+  indicators: ["esconde"]
+  material: ["cama tejida"]
+  cryptic_type: oculta
+  difficulty: facil
+  explanation: "caMA TEjida: MATE."
+  author: Cátedra
+  origin: ecorrons.github.io
+
+gato_inactivo:
+  source_id: cr-009
+  statement: Felino o herramienta para cambiar la rueda
+  enumeration: "(4)"
+  answer: GATO
+  definitions: ["Felino", "herramienta para cambiar la rueda"]
+  indicators: []
+  material: []
+  cryptic_type: doble_definicion
+  difficulty: facil
+  author: Cátedra
+  origin: localhost
+  active: false
