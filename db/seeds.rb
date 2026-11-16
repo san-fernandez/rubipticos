@@ -6,16 +6,16 @@
 
 # --- Usuarios del backend y configuración general ---
 # Credenciales de prueba (documentadas en el README). No hay registro público.
-admin = User.find_or_create_by!(email_address: "admin@rubipticos.com") do |user|
-  user.password = "admin1234"
+admin = User.find_or_create_by!(email_address: "admin@rubipticos.test") do |user|
+  user.password = "rubipticos2026"
   user.role = "admin"
 end
 
-User.find_or_create_by!(email_address: "editor@rubipticos.com") do |user|
-  user.password = "editor1234"
+User.find_or_create_by!(email_address: "editor@rubipticos.test") do |user|
+  user.password = "editor2026"
   user.role = "score_editor"
 end
 
 Setting.current
 
-puts "Admin de prueba: #{admin.email_address} / admin1234"
+puts "Admin de prueba: #{admin.email_address} / rubipticos2026"
