@@ -1,16 +1,38 @@
 Rails.application.routes.draw do
-  resource :session
+  # Sitio público
+  root "home#show"
+  resource  :player, only: %i[new create edit update destroy]   # destroy = olvidar la cookie, NO borra el registro
+  resources :games,  only: %i[new create show] do
+    member do
+      post :start
+      post :guess
+      post :hint
+      post :surrender
+    end
+  end
+  get "daily", to: "daily_cryptics#show"
+  resource  :streak, only: :show
+  resource  :leaderboard, only: :show
+  get "como-se-juega", to: "help#show", as: :help
+  resource  :chatbot, only: :show
+
+  # Login del backend (generador de autenticación de Rails 8)
+  resource  :session
   resources :passwords, param: :token
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
+  # Backend de administración
+  namespace :admin do
+    root "dashboard#show"
+    resources :cryptics, only: %i[index show update]
+    resources :syncs,    only: %i[index create]
+    resources :type_scores, :difficulty_settings, only: %i[index update]
+    resources :users
+    resources :players, only: %i[index update] do
+      collection { post :reset_leaderboard }
+    end
+    resources :blocked_names, only: %i[index create destroy]
+    resource  :setting, only: %i[edit update]
+  end
+
   get "up" => "rails/health#show", as: :rails_health_check
-
-  # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
-  # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
-  # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
-
-  # Defines the root path route ("/")
-  # root "posts#index"
 end

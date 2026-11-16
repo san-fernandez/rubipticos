@@ -1,0 +1,7 @@
+<% content_for :title, "Panel" %>
+
+<h1 class="h3 mb-3">Panel de administración</h1>
+<p class="text-body-secondary">
+  Ingresaste como <strong><%= Current.user.email_address %></strong>
+  (<%= t("enums.user.role.#{Current.user.role}") %>).
+</p>
