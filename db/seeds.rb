@@ -19,3 +19,10 @@ end
 Setting.current
 
 puts "Admin de prueba: #{admin.email_address} / admin1234"
+
+# --- Catálogo de crípticos ---
+# Se carga con el mismo sincronizador que usa el admin, por HTTP (necesita internet,
+# o que la URL de la configuración apunte a un servidor local).
+log = CrypticSynchronizer.call(user: admin, url: Setting.current.source_url)
+puts "Catálogo: #{log.summary}"
+abort("No se pudo cargar el catálogo de crípticos.") if log.failed?
