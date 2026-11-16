@@ -13,4 +13,8 @@ class User < ApplicationRecord
   scope :active, -> { where(active: true) }
 
   normalizes :email_address, with: ->(e) { e.strip.downcase }
+
+  # Unicidad también en la base (índice único en email_address).
+  validates :email_address, presence: true, uniqueness: true,
+                            format: { with: URI::MailTo::EMAIL_REGEXP }
 end
