@@ -8,6 +8,15 @@ class UserTest < ActiveSupport::TestCase
     assert_equal("downcased@example.com", user.email_address)
   end
 
+  test "el email es obligatorio, válido y único sin importar mayúsculas" do
+    assert_not User.new(password: "secreto123").valid?
+    assert_not User.new(email_address: "no-es-un-email", password: "secreto123").valid?
+
+    duplicate = User.new(email_address: " ADMIN@example.com ", password: "secreto123")
+    assert_not duplicate.valid?
+    assert duplicate.errors[:email_address].any?
+  end
+
   test "por defecto es editor de puntajes" do
     assert User.new.score_editor?
   end

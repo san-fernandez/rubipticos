@@ -59,8 +59,8 @@ Los crea `db/seeds.rb`. No hay registro público de usuarios del backend.
 
 | Rol | Email | Contraseña |
 | --- | --- | --- |
-| Administrador | `admin@rubipticos.com` | `admin1234` |
-| Editor de puntajes | `editor@rubipticos.com` | `editor1234` |
+| Administrador | `admin@rubipticos.test` | `rubipticos2026` |
+| Editor de puntajes | `editor@rubipticos.test` | `editor2026` |
 
 ## Tests
 
