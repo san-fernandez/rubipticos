@@ -1,0 +1,98 @@
+<% content_for :title, "Sincronización" %>
+
+<h1 class="h3 mb-3">Sincronización del catálogo</h1>
+
+<div class="card mb-4">
+  <div class="card-body d-flex flex-wrap justify-content-between align-items-center gap-3">
+    <div>
+      <div class="small text-body-secondary">Fuente de crípticos</div>
+      <code class="text-break"><%= @source_url %></code>
+      <div class="small text-body-secondary mt-1">La URL se cambia desde la configuración.</div>
+    </div>
+    <%= button_to "Sincronizar ahora", admin_syncs_path, class: "btn btn-primary",
+                  data: { turbo_submits_with: "Sincronizando…" } %>
+  </div>
+</div>
+
+<% if @last_sync %>
+  <section class="mb-4">
+    <h2 class="h5">Última sincronización</h2>
+    <p class="mb-2">
+      <%= render "status_badge", sync_log: @last_sync %>
+      <%= l(@last_sync.created_at, format: :long) %> · <%= @last_sync.summary %>
+    </p>
+
+    <% if @last_sync.rejections.any? %>
+      <h3 class="h6">Crípticos rechazados</h3>
+      <div class="table-responsive">
+        <table class="table table-sm align-middle">
+          <thead>
+            <tr>
+              <th>Id</th>
+              <th>Motivo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @last_sync.rejections.each do |rejection| %>
+              <tr>
+                <td class="text-nowrap"><%= rejection["id"].presence || "(sin id)" %></td>
+                <td><%= rejection["motivo"] %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% end %>
+  </section>
+<% end %>
+
+<section>
+  <h2 class="h5">Historial</h2>
+  <% if @sync_logs.empty? %>
+    <p class="text-body-secondary">Todavía no hubo sincronizaciones.</p>
+  <% else %>
+    <div class="table-responsive">
+      <table class="table table-sm table-hover align-middle">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Admin</th>
+            <th>Versión</th>
+            <th>Estado</th>
+            <th class="text-end">Creados</th>
+            <th class="text-end">Actualizados</th>
+            <th class="text-end">Desactivados</th>
+            <th class="text-end">Rechazados</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @sync_logs.each do |sync_log| %>
+            <tr>
+              <td class="text-nowrap"><%= l(sync_log.created_at, format: :short) %></td>
+              <td class="small"><%= sync_log.user&.email_address || "—" %></td>
+              <td class="small text-nowrap"><%= sync_log.version.presence || "—" %></td>
+              <td>
+                <%= render "status_badge", sync_log: %>
+                <% if sync_log.failed? %>
+                  <div class="small text-danger"><%= sync_log.error_message %></div>
+                <% end %>
+              </td>
+              <td class="text-end"><%= sync_log.created_count %></td>
+              <td class="text-end"><%= sync_log.updated_count %></td>
+              <td class="text-end"><%= sync_log.deactivated_count %></td>
+              <td class="text-end"><%= sync_log.rejected_count %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <% if @sync_logs.total_pages > 1 %>
+      <nav class="d-flex justify-content-between align-items-center" aria-label="Paginado">
+        <%= link_to_prev_page @sync_logs, "← Más nuevas", class: "btn btn-outline-secondary btn-sm" %>
+        <span class="small text-body-secondary">Página <%= @sync_logs.current_page %> de <%= @sync_logs.total_pages %></span>
+        <%= link_to_next_page @sync_logs, "Más viejas →", class: "btn btn-outline-secondary btn-sm" %>
+      </nav>
+    <% end %>
+  <% end %>
+</section>

@@ -1,0 +1,7 @@
+<%# Botón para activar o desactivar un críptico. %>
+<%= button_to cryptic.active? ? "Desactivar" : "Activar",
+              admin_cryptic_path(cryptic),
+              method: :patch,
+              params: { cryptic: { active: !cryptic.active? } },
+              class: "btn btn-sm #{cryptic.active? ? "btn-outline-danger" : "btn-outline-success"}",
+              form: { data: { turbo_confirm: cryptic.active? ? "¿Desactivar #{cryptic.source_id}? Deja de salir en el juego." : nil } } %>
