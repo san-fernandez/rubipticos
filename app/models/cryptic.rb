@@ -17,6 +17,7 @@ class Cryptic < ApplicationRecord
   }.freeze
   DIFFICULTY_LABELS = { "facil" => "Fácil", "medio" => "Medio", "avanzado" => "Avanzado" }.freeze
   STATUSES = %w[activos inactivos].freeze
+  DAILY_FILTERS = { "reservados" => "Reservados para el del día", "comunes" => "Comunes" }.freeze
 
   validates :source_id, presence: true, uniqueness: true
   validates :statement, :answer, :enumeration, presence: true
@@ -30,6 +31,11 @@ class Cryptic < ApplicationRecord
   # equivale a all), así se pueden encadenar sin if en el controlador.
   scope :active, -> { where(active: true) }
   scope :inactive, -> { where(active: false) }
+  # Críptico del día: el admin reserva crípticos con daily_candidate (marca local,
+  # la API no la manda y el sincronizador no la pisa). DailyCryptic elige entre
+  # los reservados y CrypticPicker sortea entre los comunes, así ninguno se juega antes de tiempo.
+  scope :daily_candidates, -> { where(daily_candidate: true) }
+  scope :regular, -> { where(daily_candidate: false) }
   scope :by_difficulty, ->(difficulty) { where(difficulty:) if difficulty.present? }
   scope :by_type, ->(cryptic_type) { where(cryptic_type:) if cryptic_type.present? }
   scope :by_origin, ->(origin) { where(origin:) if origin.present? }
@@ -37,6 +43,12 @@ class Cryptic < ApplicationRecord
     case status
     when "activos" then active
     when "inactivos" then inactive
+    end
+  }
+  scope :by_daily, lambda { |daily|
+    case daily
+    when "reservados" then daily_candidates
+    when "comunes" then regular
     end
   }
 

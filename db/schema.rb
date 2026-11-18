@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_16_011927) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_18_013345) do
   create_table "blocked_names", force: :cascade do |t|
     t.string "term", null: false
     t.datetime "created_at", null: false
@@ -35,6 +35,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_16_011927) do
     t.boolean "active", default: true, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "daily_candidate", default: false, null: false
     t.index ["difficulty", "active"], name: "index_cryptics_on_difficulty_and_active"
     t.index ["source_id"], name: "index_cryptics_on_source_id", unique: true
     t.check_constraint "cryptic_type IN ('anagrama', 'oculta', 'charada', 'contenedor', 'inversion', 'supresion', 'homofono', 'doble_definicion', 'iniciales', 'finales', 'sustitucion', 'simbolos', 'combinada')", name: "cryptics_type_check"

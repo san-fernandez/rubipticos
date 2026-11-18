@@ -15,6 +15,18 @@ class CrypticTest < ActiveSupport::TestCase
     assert cryptics(:gato_inactivo).valid?
   end
 
+  test "por defecto no está reservado para el Críptico del día" do
+    assert_not build.daily_candidate?
+  end
+
+  test "separa los reservados para el día de los comunes" do
+    assert_equal [ cryptics(:mate) ], Cryptic.daily_candidates.to_a
+    assert_not_includes Cryptic.regular, cryptics(:mate)
+    assert_includes Cryptic.regular, cryptics(:camisa)
+    assert_equal Cryptic.daily_candidates.to_a, Cryptic.by_daily("reservados").to_a
+    assert_equal Cryptic.count, Cryptic.by_daily("").count
+  end
+
   test "exige los campos obligatorios" do
     cryptic = Cryptic.new
 

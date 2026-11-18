@@ -27,6 +27,7 @@ mate:
   explanation: "caMA TEjida: MATE."
   author: Cátedra
   origin: ecorrons.github.io
+  daily_candidate: true
 
 gato_inactivo:
   source_id: cr-009
