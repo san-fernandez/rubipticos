@@ -4,7 +4,10 @@
 
 <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 my-3">
   <h1 class="h3 mb-0">Críptico <%= @cryptic.source_id %> <%= render "status_badge", cryptic: @cryptic %></h1>
-  <%= render "toggle", cryptic: @cryptic %>
+  <div class="d-flex gap-2">
+    <%= render "daily_toggle", cryptic: @cryptic %>
+    <%= render "toggle", cryptic: @cryptic %>
+  </div>
 </div>
 
 <p class="lead"><%= @cryptic.statement %> <span class="text-body-secondary"><%= @cryptic.enumeration %></span></p>

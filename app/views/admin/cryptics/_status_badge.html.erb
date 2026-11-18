@@ -3,3 +3,6 @@
 <% else %>
   <span class="badge text-bg-secondary">Inactivo</span>
 <% end %>
+<% if cryptic.daily_candidate? %>
+  <span class="badge text-bg-warning">Del día</span>
+<% end %>

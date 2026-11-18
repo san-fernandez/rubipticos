@@ -26,6 +26,11 @@
     <%= form.select :origin, Cryptic.origins, { include_blank: "Todos", selected: @filters[:origin] },
                     class: "form-select form-select-sm" %>
   </div>
+  <div class="col-6 col-md">
+    <%= form.label :daily, "Críptico del día", class: "form-label small" %>
+    <%= form.select :daily, Cryptic::DAILY_FILTERS.invert, { include_blank: "Todos", selected: @filters[:daily] },
+                    class: "form-select form-select-sm" %>
+  </div>
   <div class="col-12 col-md-auto d-flex gap-2">
     <%= form.submit "Filtrar", name: nil, class: "btn btn-primary btn-sm" %>
     <%= link_to "Limpiar", admin_cryptics_path, class: "btn btn-outline-secondary btn-sm" %>
@@ -63,7 +68,12 @@
           <td class="text-end">—</td>
           <td class="text-end">—</td>
           <td><%= render "status_badge", cryptic: %></td>
-          <td><%= render "toggle", cryptic: %></td>
+          <td>
+            <div class="d-flex gap-2 justify-content-end">
+              <%= render "daily_toggle", cryptic: %>
+              <%= render "toggle", cryptic: %>
+            </div>
+          </td>
         </tr>
       <% end %>
     </tbody>

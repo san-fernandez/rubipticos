@@ -26,6 +26,10 @@ class Admin::CrypticsControllerTest < ActionDispatch::IntegrationTest
 
     get admin_cryptics_path, params: { origin: "localhost" }
     assert_select "tbody tr", 1
+
+    get admin_cryptics_path, params: { daily: "reservados" }
+    assert_select "tbody tr", 1
+    assert_select "tbody", /cr-001/
   end
 
   test "muestra el detalle" do
@@ -46,6 +50,18 @@ class Admin::CrypticsControllerTest < ActionDispatch::IntegrationTest
     assert cryptic.reload.active?
   end
 
+  test "reserva un críptico para el Críptico del día y lo vuelve común" do
+    cryptic = cryptics(:camisa)
+
+    patch admin_cryptic_path(cryptic), params: { cryptic: { daily_candidate: true } }
+    assert_redirected_to admin_cryptic_path(cryptic)
+    assert_equal "El críptico cr-013 quedó reservado para el Críptico del día.", flash[:notice]
+    assert cryptic.reload.daily_candidate?
+
+    patch admin_cryptic_path(cryptic), params: { cryptic: { daily_candidate: false } }
+    assert_not cryptic.reload.daily_candidate?
+  end
+
   test "solo se puede cambiar el estado, no el contenido" do
     cryptic = cryptics(:camisa)
 
@@ -60,8 +76,9 @@ class Admin::CrypticsControllerTest < ActionDispatch::IntegrationTest
     get admin_cryptics_path
     assert_redirected_to admin_root_path
 
-    patch admin_cryptic_path(cryptics(:camisa)), params: { cryptic: { active: false } }
+    patch admin_cryptic_path(cryptics(:camisa)), params: { cryptic: { active: false, daily_candidate: true } }
     assert_redirected_to admin_root_path
     assert cryptics(:camisa).reload.active?
+    assert_not cryptics(:camisa).daily_candidate?
   end
 end
