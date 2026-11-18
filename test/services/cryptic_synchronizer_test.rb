@@ -84,6 +84,28 @@ class CrypticSynchronizerTest < ActiveSupport::TestCase
     assert Cryptic.find_by(source_id: "cr-1").active?
   end
 
+  test "no pisa la reserva para el Críptico del día, que no viene en la API" do
+    stub_catalog({ version: "v1", cripticos: [ item("cr-1") ] }.to_json)
+    sync
+    Cryptic.find_by(source_id: "cr-1").update!(daily_candidate: true)
+    stub_catalog({ version: "v2", cripticos: [ item("cr-1", "ayuda" => "Otra ayuda") ] }.to_json)
+
+    log = sync
+
+    assert_equal 1, log.updated_count
+    cryptic = Cryptic.find_by(source_id: "cr-1")
+    assert_equal "Otra ayuda", cryptic.help
+    assert cryptic.daily_candidate?
+  end
+
+  test "un críptico nuevo de la fuente no queda reservado para el día" do
+    stub_catalog({ version: "v1", cripticos: [ item("cr-1") ] }.to_json)
+
+    sync
+
+    assert_not Cryptic.find_by(source_id: "cr-1").daily_candidate?
+  end
+
   test "el catálogo con errores informa cada rechazado con id y motivo, y procesa los demás" do
     stub_catalog(catalog_file("cryptics_with_errors"))
 
