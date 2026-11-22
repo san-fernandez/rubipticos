@@ -1,0 +1,30 @@
+<%# Formulario compartido por "elegir nombre" (new) y "cambiar nombre" (edit).
+    url: player_path porque es un recurso singular; form_with elige POST o PATCH
+    según el jugador esté guardado o no. %>
+<%= form_with model: player, url: player_path do |form| %>
+  <div class="mb-3">
+    <%= form.label :name, class: "form-label" %>
+    <%= form.text_field :name, required: true, autofocus: true, autocomplete: "nickname",
+                        minlength: Player::NAME_LENGTH.min, maxlength: Player::NAME_LENGTH.max,
+                        class: class_names("form-control", "is-invalid": player.errors[:name].any?),
+                        aria: { describedby: "name-help" } %>
+    <% player.errors.full_messages_for(:name).each do |message| %>
+      <div class="invalid-feedback"><%= message %></div>
+    <% end %>
+    <div id="name-help" class="form-text">
+      De <%= Player::NAME_LENGTH.min %> a <%= Player::NAME_LENGTH.max %> caracteres. Es el que aparece en la tabla de posiciones.
+    </div>
+  </div>
+
+  <% if suggestion %>
+    <%# Este botón también envía player[name]: como va después del campo,
+        su valor es el que le llega al servidor. Un clic y queda elegido. %>
+    <div class="alert alert-info d-flex flex-wrap align-items-center gap-2">
+      <span>¿Probás con <strong><%= suggestion %></strong>?</span>
+      <%= form.button "Usar #{suggestion}", name: "player[name]", value: suggestion,
+                      class: "btn btn-outline-primary btn-sm" %>
+    </div>
+  <% end %>
+
+  <%= form.submit submit_label, class: "btn btn-primary" %>
+<% end %>

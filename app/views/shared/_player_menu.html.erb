@@ -1,0 +1,21 @@
+<%# Jugador actual en el menú público. current_player viene del concern CurrentPlayer. %>
+<ul class="navbar-nav ms-md-3">
+  <% if current_player %>
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="bi bi-person-circle" aria-hidden="true"></i> <%= current_player.name %>
+      </a>
+      <ul class="dropdown-menu dropdown-menu-end">
+        <li><%= link_to "Cambiar nombre", edit_player_path, class: "dropdown-item" %></li>
+        <li><hr class="dropdown-divider"></li>
+        <li>
+          <%= button_to "Empezar como otro jugador", player_path, method: :delete,
+                        class: "dropdown-item text-danger",
+                        form: { data: { turbo_confirm: "Vas a perder el acceso a tu jugador actual y no se puede recuperar. ¿Seguro?" } } %>
+        </li>
+      </ul>
+    </li>
+  <% else %>
+    <li class="nav-item"><%= link_to "Elegir nombre", new_player_path, class: "nav-link" %></li>
+  <% end %>
+</ul>

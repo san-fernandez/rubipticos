@@ -1,0 +1,21 @@
+<% content_for :title, "Cambiar nombre" %>
+
+<div class="row justify-content-center">
+  <div class="col-12 col-sm-10 col-md-8 col-lg-6">
+    <h1 class="h3 mb-2">Cambiar nombre</h1>
+    <p class="text-body-secondary">Tus partidas, tu racha y tus puntos se conservan.</p>
+
+    <%= render "form", player: @player, suggestion: @suggestion, submit_label: "Guardar nombre" %>
+
+    <hr class="my-4">
+
+    <h2 class="h5">Empezar como otro jugador</h2>
+    <p class="small text-body-secondary">
+      Vas a jugar con un nombre nuevo y desde cero. El jugador actual sigue en la tabla de posiciones,
+      pero desde este navegador no lo vas a poder recuperar.
+    </p>
+    <%= button_to "Empezar como otro jugador", player_path, method: :delete,
+                  class: "btn btn-outline-danger",
+                  form: { data: { turbo_confirm: "Vas a perder el acceso a tu jugador actual y no se puede recuperar. ¿Seguro?" } } %>
+  </div>
+</div>
