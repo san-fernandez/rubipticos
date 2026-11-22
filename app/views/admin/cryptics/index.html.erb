@@ -1,0 +1,93 @@
+<% content_for :title, "Crípticos" %>
+
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+  <h1 class="h3 mb-0">Crípticos</h1>
+  <%= link_to "Sincronización", admin_syncs_path, class: "btn btn-outline-primary btn-sm" %>
+</div>
+
+<%= form_with url: admin_cryptics_path, method: :get, class: "row g-2 align-items-end mb-3" do |form| %>
+  <div class="col-6 col-md">
+    <%= form.label :difficulty, "Dificultad", class: "form-label small" %>
+    <%= form.select :difficulty, Cryptic::DIFFICULTY_LABELS.invert, { include_blank: "Todas", selected: @filters[:difficulty] },
+                    class: "form-select form-select-sm" %>
+  </div>
+  <div class="col-6 col-md">
+    <%= form.label :cryptic_type, "Tipo", class: "form-label small" %>
+    <%= form.select :cryptic_type, Cryptic::TYPE_LABELS.invert, { include_blank: "Todos", selected: @filters[:cryptic_type] },
+                    class: "form-select form-select-sm" %>
+  </div>
+  <div class="col-6 col-md">
+    <%= form.label :status, "Estado", class: "form-label small" %>
+    <%= form.select :status, [ %w[Activos activos], %w[Inactivos inactivos] ], { include_blank: "Todos", selected: @filters[:status] },
+                    class: "form-select form-select-sm" %>
+  </div>
+  <div class="col-6 col-md">
+    <%= form.label :origin, "Origen", class: "form-label small" %>
+    <%= form.select :origin, Cryptic.origins, { include_blank: "Todos", selected: @filters[:origin] },
+                    class: "form-select form-select-sm" %>
+  </div>
+  <div class="col-6 col-md">
+    <%= form.label :daily, "Críptico del día", class: "form-label small" %>
+    <%= form.select :daily, Cryptic::DAILY_FILTERS.invert, { include_blank: "Todos", selected: @filters[:daily] },
+                    class: "form-select form-select-sm" %>
+  </div>
+  <div class="col-12 col-md-auto d-flex gap-2">
+    <%= form.submit "Filtrar", name: nil, class: "btn btn-primary btn-sm" %>
+    <%= link_to "Limpiar", admin_cryptics_path, class: "btn btn-outline-secondary btn-sm" %>
+  </div>
+<% end %>
+
+<p class="text-body-secondary small mb-2"><%= pluralize(@cryptics.total_count, "críptico", plural: "crípticos") %></p>
+
+<div class="table-responsive">
+  <table class="table table-sm table-hover align-middle">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Enunciado</th>
+        <th>Tipo</th>
+        <th>Dificultad</th>
+        <th>Origen</th>
+        <th class="text-end" title="Veces jugado">Jugado</th>
+        <th class="text-end">% resuelto</th>
+        <th class="text-end">Tiempo prom.</th>
+        <th>Estado</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @cryptics.each do |cryptic| %>
+        <tr>
+          <td class="text-nowrap"><%= link_to cryptic.source_id, admin_cryptic_path(cryptic) %></td>
+          <td><%= cryptic.statement %> <span class="text-body-secondary"><%= cryptic.enumeration %></span></td>
+          <td class="text-nowrap"><%= cryptic.type_label %></td>
+          <td><%= cryptic.difficulty_label %></td>
+          <td class="small text-nowrap"><%= cryptic.origin %></td>
+          <%# Las estadísticas las calcula CrypticStats (Persona 3). %>
+          <td class="text-end">—</td>
+          <td class="text-end">—</td>
+          <td class="text-end">—</td>
+          <td><%= render "status_badge", cryptic: %></td>
+          <td>
+            <div class="d-flex gap-2 justify-content-end">
+              <%= render "daily_toggle", cryptic: %>
+              <%= render "toggle", cryptic: %>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<% if @cryptics.empty? %>
+  <p class="text-body-secondary">No hay crípticos con esos filtros.</p>
+<% end %>
+
+<% if @cryptics.total_pages > 1 %>
+  <nav class="d-flex justify-content-between align-items-center" aria-label="Paginado">
+    <%= link_to_prev_page @cryptics, "← Anteriores", class: "btn btn-outline-secondary btn-sm" %>
+    <span class="small text-body-secondary">Página <%= @cryptics.current_page %> de <%= @cryptics.total_pages %></span>
+    <%= link_to_next_page @cryptics, "Siguientes →", class: "btn btn-outline-secondary btn-sm" %>
+  </nav>
+<% end %>

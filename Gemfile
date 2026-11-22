@@ -45,6 +45,9 @@ gem "image_processing", "~> 1.2"
 # Traducciones de Rails al español (validaciones, fechas, números)
 gem "rails-i18n", "~> 8.1"
 
+# Paginado de listados del admin
+gem "kaminari", "~> 1.2"
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
@@ -65,6 +68,8 @@ group :development do
 end
 
 group :test do
+  # Simula las respuestas HTTP en los tests del sincronizador (sin red real)
+  gem "webmock", "~> 3.25"
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
   gem "selenium-webdriver"

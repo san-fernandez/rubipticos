@@ -10,12 +10,36 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_16_010637) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_18_013345) do
   create_table "blocked_names", force: :cascade do |t|
     t.string "term", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["term"], name: "index_blocked_names_on_term", unique: true
+  end
+
+  create_table "cryptics", force: :cascade do |t|
+    t.string "source_id", null: false
+    t.text "statement", null: false
+    t.string "enumeration", null: false
+    t.string "answer", null: false
+    t.json "definitions", default: [], null: false
+    t.json "indicators", default: [], null: false
+    t.json "material", default: [], null: false
+    t.string "cryptic_type", null: false
+    t.string "difficulty", null: false
+    t.text "help"
+    t.text "explanation"
+    t.string "author"
+    t.string "origin"
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "daily_candidate", default: false, null: false
+    t.index ["difficulty", "active"], name: "index_cryptics_on_difficulty_and_active"
+    t.index ["source_id"], name: "index_cryptics_on_source_id", unique: true
+    t.check_constraint "cryptic_type IN ('anagrama', 'oculta', 'charada', 'contenedor', 'inversion', 'supresion', 'homofono', 'doble_definicion', 'iniciales', 'finales', 'sustitucion', 'simbolos', 'combinada')", name: "cryptics_type_check"
+    t.check_constraint "difficulty IN ('facil', 'medio', 'avanzado')", name: "cryptics_difficulty_check"
   end
 
   create_table "players", force: :cascade do |t|
@@ -49,6 +73,22 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_16_010637) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "sync_logs", force: :cascade do |t|
+    t.integer "user_id"
+    t.string "version"
+    t.string "status", null: false
+    t.integer "created_count", default: 0, null: false
+    t.integer "updated_count", default: 0, null: false
+    t.integer "deactivated_count", default: 0, null: false
+    t.integer "rejected_count", default: 0, null: false
+    t.json "rejections", default: [], null: false
+    t.text "error_message"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_sync_logs_on_user_id"
+    t.check_constraint "status IN ('ok', 'unchanged', 'failed')", name: "sync_logs_status_check"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email_address", null: false
     t.string "password_digest", null: false
@@ -61,4 +101,5 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_16_010637) do
   end
 
   add_foreign_key "sessions", "users"
+  add_foreign_key "sync_logs", "users"
 end

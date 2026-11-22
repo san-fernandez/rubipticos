@@ -1,0 +1,7 @@
+<%# Botón para reservar un críptico para el Críptico del día o volverlo común. %>
+<%= button_to cryptic.daily_candidate? ? "Quitar del día" : "Reservar para el día",
+              admin_cryptic_path(cryptic),
+              method: :patch,
+              params: { cryptic: { daily_candidate: !cryptic.daily_candidate? } },
+              class: "btn btn-sm #{cryptic.daily_candidate? ? "btn-outline-secondary" : "btn-outline-warning"}",
+              form: { data: { turbo_confirm: cryptic.daily_candidate? ? nil : "¿Reservar #{cryptic.source_id} para el Críptico del día? Deja de salir en las partidas comunes." } } %>

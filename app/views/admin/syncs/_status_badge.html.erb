@@ -1,0 +1,8 @@
+<% case sync_log.status %>
+<% when "ok" %>
+  <span class="badge text-bg-success">Sincronizada</span>
+<% when "unchanged" %>
+  <span class="badge text-bg-secondary">Sin cambios</span>
+<% else %>
+  <span class="badge text-bg-danger">Falló</span>
+<% end %>

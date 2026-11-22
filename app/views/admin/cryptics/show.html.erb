@@ -1,0 +1,69 @@
+<% content_for :title, "Críptico #{@cryptic.source_id}" %>
+
+<%= link_to "← Volver al listado", admin_cryptics_path, class: "small" %>
+
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 my-3">
+  <h1 class="h3 mb-0">Críptico <%= @cryptic.source_id %> <%= render "status_badge", cryptic: @cryptic %></h1>
+  <div class="d-flex gap-2">
+    <%= render "daily_toggle", cryptic: @cryptic %>
+    <%= render "toggle", cryptic: @cryptic %>
+  </div>
+</div>
+
+<p class="lead"><%= @cryptic.statement %> <span class="text-body-secondary"><%= @cryptic.enumeration %></span></p>
+
+<div class="row g-4">
+  <div class="col-lg-7">
+    <dl class="row mb-0">
+      <dt class="col-sm-4">Respuesta</dt>
+      <dd class="col-sm-8"><%= @cryptic.answer %></dd>
+
+      <dt class="col-sm-4">Tipo</dt>
+      <dd class="col-sm-8"><%= @cryptic.type_label %></dd>
+
+      <dt class="col-sm-4">Dificultad</dt>
+      <dd class="col-sm-8"><%= @cryptic.difficulty_label %></dd>
+
+      <dt class="col-sm-4">Definiciones</dt>
+      <dd class="col-sm-8"><%= @cryptic.definitions.presence&.to_sentence || "—" %></dd>
+
+      <dt class="col-sm-4">Indicadores</dt>
+      <dd class="col-sm-8"><%= @cryptic.indicators.presence&.to_sentence || "—" %></dd>
+
+      <dt class="col-sm-4">Material</dt>
+      <dd class="col-sm-8"><%= @cryptic.material.presence&.to_sentence || "—" %></dd>
+
+      <dt class="col-sm-4">Ayuda</dt>
+      <dd class="col-sm-8"><%= @cryptic.help.presence || "—" %></dd>
+
+      <dt class="col-sm-4">Explicación</dt>
+      <dd class="col-sm-8"><%= @cryptic.explanation.presence || "—" %></dd>
+
+      <dt class="col-sm-4">Autor</dt>
+      <dd class="col-sm-8"><%= @cryptic.author.presence || "—" %></dd>
+
+      <dt class="col-sm-4">Origen</dt>
+      <dd class="col-sm-8"><%= @cryptic.origin.presence || "—" %></dd>
+
+      <dt class="col-sm-4">Última actualización</dt>
+      <dd class="col-sm-8"><%= l(@cryptic.updated_at, format: :long) %></dd>
+    </dl>
+  </div>
+
+  <div class="col-lg-5">
+    <div class="card">
+      <div class="card-body">
+        <h2 class="h6 card-title">Estadísticas</h2>
+        <%# Las calcula CrypticStats (Persona 3). %>
+        <dl class="row mb-0 small">
+          <dt class="col-7">Veces jugado</dt>
+          <dd class="col-5 text-end">—</dd>
+          <dt class="col-7">Porcentaje resuelto</dt>
+          <dd class="col-5 text-end">—</dd>
+          <dt class="col-7">Tiempo promedio</dt>
+          <dd class="col-5 text-end">—</dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+</div>
