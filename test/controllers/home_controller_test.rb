@@ -18,4 +18,20 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
     assert_select "nav a", "Tabla de posiciones"
     assert_select "nav a", "Cómo se juega"
   end
+
+  test "sin jugador invita a elegir un nombre" do
+    get root_path
+
+    assert_select "main a[href=?]", new_player_path
+    assert_select "nav a", "Elegir nombre"
+  end
+
+  test "con jugador muestra su nombre y el botón para jugar" do
+    sign_in_player players(:pedrito)
+    get root_path
+
+    assert_select "main", /Hola, Pedrito/
+    assert_select "main a[href=?]", new_game_path
+    assert_select "nav", /Pedrito/
+  end
 end

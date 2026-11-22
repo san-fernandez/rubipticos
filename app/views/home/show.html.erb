@@ -3,5 +3,11 @@
 <div class="py-4 text-center">
   <h1 class="display-5 fw-bold">Rubípticos</h1>
   <p class="lead col-lg-8 mx-auto"><%= @setting.welcome_text %></p>
-  <%= link_to "Jugar", new_game_path, class: "btn btn-primary btn-lg" %>
+
+  <% if current_player %>
+    <p class="mb-3">Hola, <strong><%= current_player.name %></strong>.</p>
+    <%= link_to "Jugar", new_game_path, class: "btn btn-primary btn-lg" %>
+  <% else %>
+    <%= link_to "Elegí tu nombre para jugar", new_player_path, class: "btn btn-primary btn-lg" %>
+  <% end %>
 </div>
