@@ -10,6 +10,9 @@ es:
       player:
         one: "Jugador"
         other: "Jugadores"
+      blocked_name:
+        one: "Término bloqueado"
+        other: "Términos bloqueados"
     attributes:
       user:
         email_address: "Email"
@@ -22,6 +25,16 @@ es:
         welcome_text: "Texto de bienvenida"
       player:
         name: "Nombre"
+        blocked: "Bloqueado"
+      blocked_name:
+        term: "Término"
+    errors:
+      models:
+        player:
+          attributes:
+            name:
+              taken: "ya lo está usando otro jugador"
+              blocked: "no está permitido"
   enums:
     user:
       role:

@@ -1,0 +1,9 @@
+# Los fixtures no corren callbacks: el token se pone a mano.
+pedrito:
+  name: Pedrito
+  token: token-de-pedrito-123456
+
+bloqueado:
+  name: Bloqueadito
+  token: token-de-bloqueadito-1234
+  blocked: true
