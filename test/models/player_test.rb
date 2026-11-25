@@ -64,6 +64,23 @@ class PlayerTest < ActiveSupport::TestCase
     assert_not player.reload.blocked?
   end
 
+  test "un bloqueado que manda el mismo nombre sigue bloqueado" do
+    player = players(:bloqueado)
+
+    [ "Bloqueadito", " BLOQUEADITO " ].each do |same_name|
+      assert_not player.rename(same_name)
+      assert_includes player.errors[:name], "está bloqueado: elegí uno distinto"
+      assert player.reload.blocked?
+    end
+  end
+
+  test "un jugador no bloqueado puede mandar el mismo nombre" do
+    player = players(:pedrito)
+
+    assert player.rename("Pedrito")
+    assert_not player.reload.blocked?
+  end
+
   test "visible excluye a los jugadores bloqueados" do
     assert_includes Player.visible, players(:pedrito)
     assert_not_includes Player.visible, players(:bloqueado)

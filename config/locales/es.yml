@@ -66,6 +66,7 @@ es:
             name:
               taken: "ya lo está usando otro jugador"
               blocked: "no está permitido"
+              still_blocked: "está bloqueado: elegí uno distinto"
   enums:
     user:
       role:

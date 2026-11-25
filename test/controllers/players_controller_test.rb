@@ -74,6 +74,25 @@ class PlayersControllerTest < ActionDispatch::IntegrationTest
     assert_select "nav", /Pedrito/
   end
 
+  test "un jugador bloqueado no se libera mandando el mismo nombre" do
+    player = players(:bloqueado)
+    sign_in_player player
+    patch player_path, params: { player: { name: player.name } }
+
+    assert_response :unprocessable_entity
+    assert_select ".invalid-feedback", /elegí uno distinto/
+    assert player.reload.blocked?
+  end
+
+  test "un jugador bloqueado se libera eligiendo otro nombre" do
+    player = players(:bloqueado)
+    sign_in_player player
+    patch player_path, params: { player: { name: "Nuevito" } }
+
+    assert_redirected_to root_path
+    assert_not player.reload.blocked?
+  end
+
   test "empezar como otro borra la cookie pero no el jugador" do
     sign_in_player players(:pedrito)
 

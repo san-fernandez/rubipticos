@@ -34,9 +34,15 @@ class Player < ApplicationRecord
   end
 
   # Cambio de nombre hecho por el propio jugador. El bloqueo es por el nombre:
-  # si elige uno nuevo (que pasa las validaciones, incluidos los términos
-  # bloqueados) deja de estar bloqueado.
+  # solo se desbloquea si elige uno DISTINTO (que además pasa las validaciones,
+  # incluidos los términos bloqueados). Mandar el mismo nombre, aunque sea con
+  # otras mayúsculas, no lo libera.
   def rename(new_name)
+    if blocked? && same_name?(new_name)
+      errors.add(:name, :still_blocked)
+      return false
+    end
+
     update(name: new_name, blocked: false)
   end
 
@@ -47,6 +53,12 @@ class Player < ApplicationRecord
   end
 
   private
+
+  # Compara con el nombre guardado, como lo hace la unicidad:
+  # sin espacios en los bordes y sin distinguir mayúsculas.
+  def same_name?(other)
+    other.to_s.strip.casecmp?(name_in_database.to_s)
+  end
 
   def name_not_blocked
     errors.add(:name, :blocked) if BlockedName.matches?(name)
