@@ -6,7 +6,7 @@ Sitio web para jugar crípticos: acertijos de palabras en español en los que un
 
 | Herramienta | Versión |
 | --- | --- |
-| Ruby | 3.3.5 (ver `.ruby-version`) |
+| Ruby | 3.3.14 (ver `.ruby-version`) |
 | Rails | 8.1 |
 | Node.js | 22.12 o más (ver `.node-version`) |
 | Yarn | 1.22 |
