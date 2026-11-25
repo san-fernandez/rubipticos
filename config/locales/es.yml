@@ -10,6 +10,9 @@ es:
       player:
         one: "Jugador"
         other: "Jugadores"
+      blocked_name:
+        one: "Término bloqueado"
+        other: "Términos bloqueados"
       cryptic:
         one: "Críptico"
         other: "Crípticos"
@@ -28,6 +31,9 @@ es:
         welcome_text: "Texto de bienvenida"
       player:
         name: "Nombre"
+        blocked: "Bloqueado"
+      blocked_name:
+        term: "Término"
       cryptic:
         source_id: "Id de la fuente"
         statement: "Enunciado"
@@ -53,6 +59,14 @@ es:
         rejected_count: "Rechazados"
         rejections: "Rechazados"
         error_message: "Error"
+    errors:
+      models:
+        player:
+          attributes:
+            name:
+              taken: "ya lo está usando otro jugador"
+              blocked: "no está permitido"
+              still_blocked: "está bloqueado: elegí uno distinto"
   enums:
     user:
       role:

@@ -77,6 +77,13 @@ bin/rubocop
 - Los roles se validan en el modelo (`enum`) y en la base (restricción `CHECK`). El nombre del jugador es único sin distinguir mayúsculas gracias a un índice único sobre `lower(name)`.
 - La configuración general (`Setting`) tiene una sola fila, a la que se accede con `Setting.current`.
 
+### Jugadores
+
+- El jugador no tiene cuenta: el navegador solo guarda su token, en una cookie firmada, permanente y `httponly`. Si alguien la edita, la firma no coincide y se descarta. Si se borran las cookies, se empieza de cero.
+- «Empezar como otro jugador» borra la cookie, no el registro: el jugador anterior sigue en la base y en la tabla de posiciones.
+- **Términos bloqueados por «contiene»:** un nombre se rechaza si contiene un término bloqueado, sin distinguir mayúsculas. Bloquear `tonto` también rechaza `ElTonto99`. Elegimos «contiene» en lugar de «es igual» porque con la igualdad alcanza con agregar un número o una letra para esquivar el bloqueo.
+- **Jugador bloqueado:** no aparece en la tabla de posiciones y, para seguir jugando, tiene que cambiar el nombre. Se desbloquea solo si elige un nombre distinto (sin contar mayúsculas ni espacios en los bordes) que pase las validaciones, incluidos los términos bloqueados. Sus partidas, racha y puntos se conservan.
+
 ### Catálogo y sincronización
 
 - La sincronización es un servicio (`CrypticSynchronizer`), no lógica del controlador. La usan el admin y el seed.

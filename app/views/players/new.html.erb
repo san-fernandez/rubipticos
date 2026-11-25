@@ -1,0 +1,12 @@
+<% content_for :title, "Elegí tu nombre" %>
+
+<div class="row justify-content-center">
+  <div class="col-12 col-sm-10 col-md-8 col-lg-6">
+    <h1 class="h3 mb-2">Elegí tu nombre</h1>
+    <p class="text-body-secondary">
+      No hace falta crear una cuenta. Este navegador te va a recordar; si borrás las cookies, empezás de cero.
+    </p>
+
+    <%= render "form", player: @player, suggestion: @suggestion, submit_label: "Empezar a jugar" %>
+  </div>
+</div>
