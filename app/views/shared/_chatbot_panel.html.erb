@@ -1,0 +1,23 @@
+<%# Panel del chatbot, disponible en todas las páginas públicas.
+    El frame es lazy: recién pide /chatbot cuando el panel se abre, y retoma
+    el nodo guardado en la sesión. Las opciones navegan dentro del frame. %>
+<div class="offcanvas offcanvas-end" tabindex="-1" id="chatbot-panel" aria-labelledby="chatbot-panel-title">
+  <div class="offcanvas-header border-bottom">
+    <h2 class="offcanvas-title h5" id="chatbot-panel-title">Cómo se juega</h2>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+  </div>
+  <div class="offcanvas-body">
+    <%= turbo_frame_tag "chatbot", src: chatbot_path, loading: :lazy do %>
+      <p class="text-body-secondary">Cargando…</p>
+    <% end %>
+  </div>
+  <div class="offcanvas-footer border-top p-3 small">
+    <%# _top: este link sale del frame y abre la página completa. %>
+    <%= link_to "Ver todas las reglas en una página", help_path, data: { turbo_frame: "_top" } %>
+  </div>
+</div>
+
+<button type="button" class="btn btn-primary rounded-pill shadow position-fixed bottom-0 end-0 m-3 chatbot-launcher"
+        data-bs-toggle="offcanvas" data-bs-target="#chatbot-panel" aria-controls="chatbot-panel">
+  <i class="bi bi-chat-dots" aria-hidden="true"></i> ¿Cómo se juega?
+</button>

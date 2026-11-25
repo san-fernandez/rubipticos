@@ -32,16 +32,25 @@
             <li class="nav-item"><%= link_to "Jugar", new_game_path, class: "nav-link" %></li>
             <li class="nav-item"><%= link_to "Mi racha", streak_path, class: "nav-link" %></li>
             <li class="nav-item"><%= link_to "Tabla de posiciones", leaderboard_path, class: "nav-link" %></li>
-            <li class="nav-item"><%= link_to "Cómo se juega", help_path, class: "nav-link" %></li>
+            <%# Abre el panel del chatbot; sin JavaScript, el href lleva a la página de reglas. %>
+            <li class="nav-item">
+              <%= link_to "Cómo se juega", help_path, class: "nav-link",
+                          data: { bs_toggle: "offcanvas", bs_target: "#chatbot-panel" },
+                          aria: { controls: "chatbot-panel" } %>
+            </li>
           </ul>
           <%= render "shared/player_menu" %>
+          <%= render "shared/theme_toggle" %>
         </div>
       </div>
     </nav>
 
-    <main class="container">
+    <main class="container pb-5">
       <%= render "shared/flash" %>
       <%= yield %>
     </main>
+
+    <%# La página del chatbot ya tiene su propio frame "chatbot": ahí no va el panel. %>
+    <%= render "shared/chatbot_panel" unless content_for?(:without_chatbot_panel) %>
   </body>
 </html>

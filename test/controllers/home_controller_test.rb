@@ -34,4 +34,17 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
     assert_select "main a[href=?]", new_game_path
     assert_select "nav", /Pedrito/
   end
+
+  test "el panel del chatbot está en la página y carga en lazy" do
+    get root_path
+
+    assert_select "#chatbot-panel turbo-frame#chatbot[src=?][loading=lazy]", chatbot_path
+    assert_select "nav a[data-bs-target='#chatbot-panel']", "Cómo se juega"
+  end
+
+  test "el menú tiene el botón de tema claro u oscuro" do
+    get root_path
+
+    assert_select "nav button[data-controller=theme][data-action='theme#toggle']"
+  end
 end
