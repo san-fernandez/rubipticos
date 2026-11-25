@@ -19,6 +19,11 @@ class Player < ApplicationRecord
   # Los bloqueados no aparecen en la tabla de posiciones (lo usa P3).
   scope :visible, -> { where(blocked: false) }
 
+  # Búsqueda del admin por parte del nombre, sin distinguir mayúsculas.
+  scope :name_like, lambda { |text|
+    text.present? ? where("lower(name) LIKE ?", "%#{sanitize_sql_like(text.downcase)}%") : all
+  }
+
   # Primera variante libre del nombre: "Pedrito" → "Pedrito_2", "Pedrito_3"...
   # Recorre un rango infinito con un enumerador lazy: genera candidatos
   # de a uno y se detiene en el primero que no está tomado.
@@ -44,6 +49,18 @@ class Player < ApplicationRecord
     end
 
     update(name: new_name, blocked: false)
+  end
+
+  # Bloqueo o desbloqueo hecho por el admin. Con add_term, además agrega el
+  # nombre como término bloqueado, así nadie más puede usarlo: las dos cosas
+  # en una transacción (o se hacen ambas o ninguna).
+  # update_attribute saltea las validaciones a propósito: se bloquea justamente
+  # porque el nombre no es aceptable, y eso no debe impedir guardar el bloqueo.
+  def update_block!(blocked:, add_term: false)
+    transaction do
+      update_attribute(:blocked, blocked)
+      BlockedName.find_or_create_by!(term: name) if blocked? && add_term
+    end
   end
 
   # true si el único problema del nombre es que otro jugador ya lo usa:

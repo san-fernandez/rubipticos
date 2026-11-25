@@ -18,4 +18,12 @@ class SettingTest < ActiveSupport::TestCase
 
     assert_not setting.valid?
   end
+
+  test "reiniciar la tabla de posiciones guarda el momento actual" do
+    freeze_time do
+      Setting.current.reset_leaderboard!
+
+      assert_equal Time.current, Setting.current.leaderboard_reset_at
+    end
+  end
 end

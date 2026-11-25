@@ -1,0 +1,16 @@
+<%# Acciones de bloqueo de un jugador. Bloquear y prohibir el nombre agrega
+    además el nombre como término bloqueado (Player#update_block!). %>
+<% if player.blocked? %>
+  <%= button_to "Desbloquear", admin_player_path(player), method: :patch,
+                params: { player: { blocked: false } },
+                class: "btn btn-sm btn-outline-success" %>
+<% else %>
+  <%= button_to "Bloquear", admin_player_path(player), method: :patch,
+                params: { player: { blocked: true } },
+                class: "btn btn-sm btn-outline-danger",
+                form: { data: { turbo_confirm: "¿Bloquear a #{player.name}? Deja de aparecer en la tabla de posiciones." } } %>
+  <%= button_to "Bloquear y prohibir el nombre", admin_player_path(player), method: :patch,
+                params: { player: { blocked: true, add_term: true } },
+                class: "btn btn-sm btn-danger",
+                form: { data: { turbo_confirm: "¿Bloquear a #{player.name} y prohibir «#{player.name}» en los nombres?" } } %>
+<% end %>
