@@ -14,7 +14,7 @@ Sitio web para jugar crípticos: acertijos de palabras en español en los que un
 
 Node y Yarn hacen falta porque Bootstrap se compila con `cssbundling-rails`.
 
-## Cómo levantarlo
+## Cómo levantarlo (Linux y macOS)
 
 ```bash
 git clone git@github.com:san-fernandez/rubipticos.git
@@ -34,6 +34,40 @@ bin/dev              # levanta Rails y el watcher de CSS
 Después, abrir http://localhost:3000. El backend está en http://localhost:3000/admin.
 
 `db:setup` carga el catálogo de crípticos por HTTP desde la API de la cátedra, así que necesita conexión a internet.
+
+## Cómo levantarlo en Windows
+
+**Opción recomendada: WSL 2.** Rails recomienda usar Windows a través de WSL, que da un Ubuntu completo:
+
+```powershell
+wsl --install -d Ubuntu
+```
+
+Dentro de Ubuntu se instalan Ruby (con [rbenv](https://github.com/rbenv/rbenv) o [mise](https://mise.jdx.dev)), Node.js, Yarn y SQLite, y se siguen los mismos pasos de arriba. El sitio queda en http://localhost:3000, accesible desde el navegador de Windows.
+
+**Opción alternativa: Windows nativo.** Con PowerShell:
+
+1. Instalar Ruby 3.3 con [RubyInstaller](https://rubyinstaller.org) (versión **with Devkit**) y, al terminar, dejar que corra `ridk install`.
+2. Instalar [Node.js](https://nodejs.org) 22 y después Yarn: `npm install --global yarn`.
+3. Instalar las dependencias y preparar la base:
+
+   ```powershell
+   bundle install
+   yarn install
+   ruby bin/rails db:setup
+   ```
+
+4. `bin/dev` es un script de shell y no corre en PowerShell. En su lugar, abrir dos terminales:
+
+   ```powershell
+   # Terminal 1: compila el CSS de Bootstrap cada vez que cambia
+   yarn watch:css
+
+   # Terminal 2: el servidor de Rails
+   ruby bin/rails server
+   ```
+
+Los comandos de `bin/` se ejecutan anteponiendo `ruby` (por ejemplo, `ruby bin/rails test`). El `Gemfile.lock` ya incluye la plataforma de Windows (`x64-mingw-ucrt`), así que las gemas nativas como `sqlite3` se instalan precompiladas.
 
 ## Catálogo de crípticos
 
