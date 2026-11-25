@@ -1,0 +1,220 @@
+# Nodos del chatbot de "Cómo se juega" (lo lee ChatbotTree).
+#
+# Cada nodo tiene:
+#   message:        lo que dice el bot.
+#   example:        (opcional) un críptico de ejemplo, INVENTADO: ninguno puede
+#                   ser un críptico del catálogo (no regalamos respuestas).
+#   example_answer: (opcional) su respuesta.
+#   explanation:    (opcional) cómo se resuelve el ejemplo.
+#   options:        botones; cada uno lleva a otro nodo (target).
+#
+# "Volver al menú" se agrega solo a todos los nodos salvo welcome.
+# Los tests verifican que cada target exista, que haya un nodo type_<tipo>
+# por cada Cryptic::TYPES y que ningún ejemplo sea del catálogo.
+
+welcome:
+  message: "¡Hola! Soy el ayudante de Rubípticos. Te explico cómo se juega. ¿Por dónde empezamos?"
+  options:
+    - { text: "¿Qué es un críptico?", target: what_is }
+    - { text: "Las partes de un enunciado", target: parts }
+    - { text: "Tipos de juego de palabras", target: types }
+    - { text: "Intentos y rendirse", target: attempts }
+    - { text: "Pistas", target: hints }
+    - { text: "Puntaje", target: scoring }
+    - { text: "Rachas", target: streaks }
+    - { text: "Críptico del día", target: daily }
+
+what_is:
+  message: >-
+    Un críptico es una frase que lleva dos veces a la misma palabra: una por su
+    significado y otra por un juego de palabras. Se lee como una oración normal,
+    pero hay que leerla como instrucciones. Entre paréntesis va la cantidad de letras.
+  example: "Naranjas opacas esconden un plato caliente (4)"
+  example_answer: "SOPA"
+  explanation: "naranja(S OPA)cas: «esconden» avisa que la respuesta está escrita de corrido, y «un plato caliente» la define."
+  options:
+    - { text: "¿Cuáles son las partes?", target: parts }
+    - { text: "Ver los tipos", target: types }
+
+parts:
+  message: >-
+    Todo enunciado tiene: la definición (sinónimo o descripción de la respuesta,
+    siempre al principio o al final), el indicador (la palabra que dice qué
+    operación hacer), el material (las letras o palabras sobre las que se opera)
+    y la enumeración (cuántas letras tiene la respuesta; las tildes no cuentan).
+    Palabras como «da», «es» o «para» solo unen las partes.
+  example: "Nada desordenada: camina (4)"
+  example_answer: "ANDA"
+  explanation: "Definición: «camina». Indicador: «desordenada». Material: «Nada». Enumeración: (4). NADA con las letras reordenadas da ANDA."
+  options:
+    - { text: "Ver los tipos", target: types }
+    - { text: "¿Cómo se juega una partida?", target: attempts }
+
+types:
+  message: "Hay 13 tipos de juego de palabras. ¿Cuál querés ver?"
+  options:
+    - { text: "Anagrama", target: type_anagrama }
+    - { text: "Oculta", target: type_oculta }
+    - { text: "Charada", target: type_charada }
+    - { text: "Contenedor", target: type_contenedor }
+    - { text: "Inversión", target: type_inversion }
+    - { text: "Supresión", target: type_supresion }
+    - { text: "Homófono", target: type_homofono }
+    - { text: "Doble definición", target: type_doble_definicion }
+    - { text: "Iniciales", target: type_iniciales }
+    - { text: "Finales", target: type_finales }
+    - { text: "Sustitución", target: type_sustitucion }
+    - { text: "Símbolos", target: type_simbolos }
+    - { text: "Combinada", target: type_combinada }
+
+type_anagrama:
+  message: "Anagrama: se reordenan las letras del material. Lo avisan palabras como «revuelto», «loco», «desordenado» o «alborotado»."
+  example: "Nada desordenada: camina (4)"
+  example_answer: "ANDA"
+  explanation: "Las letras de NADA, desordenadas, forman ANDA."
+  options:
+    - { text: "Otro tipo", target: types }
+
+type_oculta:
+  message: "Oculta: la respuesta está escrita de corrido dentro del material, a veces entre dos palabras. Lo avisan «esconde», «guarda», «tiene adentro»."
+  example: "Naranjas opacas esconden un plato caliente (4)"
+  example_answer: "SOPA"
+  explanation: "naranja(S OPA)cas."
+  options:
+    - { text: "Otro tipo", target: types }
+
+type_charada:
+  message: "Charada: se pegan piezas, una detrás de otra. Lo avisan «con», «y», «junto a», «forman»."
+  example: "Astro rey y cubo de juego forman un militar (7)"
+  example_answer: "SOLDADO"
+  explanation: "SOL (astro rey) + DADO (cubo de juego) = SOLDADO."
+  options:
+    - { text: "Otro tipo", target: types }
+
+type_contenedor:
+  message: "Contenedor: una pieza va dentro de otra. Lo avisan «metido en», «dentro de», «abraza», «rodea»."
+  example: "Le metido en la mata da una valija (6)"
+  example_answer: "MALETA"
+  explanation: "MA(LE)TA: LE metido en MATA."
+  options:
+    - { text: "Otro tipo", target: types }
+
+type_inversion:
+  message: "Inversión: se lee el material al revés. Lo avisan «de vuelta», «al revés», «que vuelve»."
+  example: "Aro, de vuelta, reza (3)"
+  example_answer: "ORA"
+  explanation: "ARO al revés es ORA, y «reza» es la definición."
+  options:
+    - { text: "Otro tipo", target: types }
+
+type_supresion:
+  message: "Supresión: se le quita una letra al material (la primera, la última o la del medio). Lo avisan «sin cabeza», «descabezado», «sin cola», «sin corazón»."
+  example: "Clavo descabezado: limpio con agua (4)"
+  example_answer: "LAVO"
+  explanation: "(C)LAVO sin la primera letra da LAVO."
+  options:
+    - { text: "Otro tipo", target: types }
+
+type_homofono:
+  message: "Homófono: la respuesta suena igual que otra palabra, pero se escribe distinto. Lo avisan «se oye como», «suena a», «dicho en voz alta»."
+  example: "Se oye como el animal que da leche: portaequipajes del auto (4)"
+  example_answer: "BACA"
+  explanation: "BACA (el portaequipajes) suena igual que VACA."
+  options:
+    - { text: "Otro tipo", target: types }
+
+type_doble_definicion:
+  message: "Doble definición: dos definiciones distintas de la misma palabra, sin indicador ni material."
+  example: "Parte alta del árbol o vaso para brindar (4)"
+  example_answer: "COPA"
+  explanation: "La COPA de un árbol y la COPA para brindar."
+  options:
+    - { text: "Otro tipo", target: types }
+
+type_iniciales:
+  message: "Iniciales: la respuesta se forma con las primeras letras de varias palabras. Lo avisan «al principio», «al comienzo», «cabezas de»."
+  example: "Al principio, sus olas lucen: el astro rey (3)"
+  example_answer: "SOL"
+  explanation: "Sus, Olas, Lucen: S + O + L = SOL."
+  options:
+    - { text: "Otro tipo", target: types }
+
+type_finales:
+  message: "Finales: la respuesta se forma con las últimas letras de varias palabras. Lo avisan «al final», «colas de», «finales de»."
+  example: "Al final, top, mesa y plan forman el que sale del horno (3)"
+  example_answer: "PAN"
+  explanation: "toP, mesA, plaN: P + A + N = PAN."
+  options:
+    - { text: "Otro tipo", target: types }
+
+type_sustitucion:
+  message: "Sustitución: se cambia una letra del material por otra. Lo avisan «con otra cabeza», «cambia», «en lugar de»."
+  example: "Lata con otra cabeza: extremidad del perro (4)"
+  example_answer: "PATA"
+  explanation: "LATA con otra primera letra da PATA."
+  options:
+    - { text: "Otro tipo", target: types }
+
+type_simbolos:
+  message: "Símbolos: se usan abreviaturas conocidas, como números romanos, puntos cardinales, elementos químicos o notas musicales."
+  example: "Calcio y sodio dan un pelo blanco (4)"
+  example_answer: "CANA"
+  explanation: "Ca (calcio) + Na (sodio) = CANA."
+  options:
+    - { text: "Otro tipo", target: types }
+
+type_combinada:
+  message: "Combinada: se aplican dos o más operaciones seguidas, por ejemplo una supresión y después una inversión."
+  example: "Paso descabezado, de vuelta, da la hembra del oso (3)"
+  example_answer: "OSA"
+  explanation: "(P)ASO sin cabeza da ASO; leído de vuelta da OSA."
+  options:
+    - { text: "Otro tipo", target: types }
+
+attempts:
+  message: >-
+    Elegís una dificultad (fácil, medio o avanzado) y te toca al azar un críptico
+    que no jugaste. Al tocar «Jugar» arranca el cronómetro. Tenés hasta 5 intentos;
+    no importan las tildes, las mayúsculas ni los espacios, pero la Ñ no es lo mismo
+    que la N. No hay tiempo límite. Si te rendís, ves la respuesta y la explicación,
+    pero sumás 0 puntos. Cada críptico se juega una sola vez.
+  options:
+    - { text: "¿Y las pistas?", target: hints }
+    - { text: "¿Cómo se calculan los puntos?", target: scoring }
+
+hints:
+  message: >-
+    Podés pedir hasta 4 pistas, siempre en este orden: 1) el tipo de juego de
+    palabras; 2) la definición resaltada; 3) el indicador y el material resaltados;
+    4) una ayuda. Cada pista que pedís resta un 20 % del puntaje.
+  options:
+    - { text: "¿Cómo se calculan los puntos?", target: scoring }
+
+scoring:
+  message: >-
+    Los puntos son: base × tiempo × pistas × racha, redondeado, y como mínimo 10
+    si lo resolvés. La base son los puntos del tipo por el multiplicador de la
+    dificultad. Si tardás más que el tiempo de referencia (1, 3 o 5 minutos según
+    la dificultad), el factor de tiempo baja, hasta 0,25. Cada pista resta 0,20 y la
+    racha suma 0,05 por día, hasta ×1,5.
+  example: "Un fácil de un tipo que vale 100 puntos, resuelto en 90 segundos (la referencia es 60), con 2 pistas y racha de 3 días."
+  explanation: "100 × (60 ÷ 90) × (1 − 0,40) × (1 + 0,15) = 100 × 0,67 × 0,6 × 1,15 ≈ 46 puntos."
+  options:
+    - { text: "¿Qué es la racha?", target: streaks }
+    - { text: "Críptico del día", target: daily }
+
+streaks:
+  message: >-
+    La racha es la cantidad de días seguidos en los que resolviste al menos un
+    críptico (rendirse no cuenta). Si un día no resolvés ninguno, se corta y
+    vuelve a empezar. Cada día de racha, contando hoy, suma 0,05 al multiplicador,
+    hasta ×1,5.
+  options:
+    - { text: "¿Cómo se calculan los puntos?", target: scoring }
+
+daily:
+  message: >-
+    El Críptico del día es el mismo para todos los jugadores y cambia cada día.
+    Vale el doble de puntos que uno común.
+  options:
+    - { text: "¿Cómo se calculan los puntos?", target: scoring }
