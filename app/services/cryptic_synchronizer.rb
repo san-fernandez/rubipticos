@@ -10,6 +10,7 @@ require "net/http"
 # - GET con timeout de 10 s. Si falla la red o el JSON no sirve, no se toca nada.
 # - Si la versión es la misma que la última sincronización exitosa: "Sin cambios".
 # - Cada críptico se identifica por su id de la fuente: se crea o se actualiza.
+#   Su origen es el host de la URL de la última sincronización que lo trajo.
 # - Un críptico inválido (o con id repetido) se saltea y se informa con su motivo.
 # - Los que ya no vienen en la fuente se desactivan, nunca se borran.
 #   Los que vienen en la fuente quedan activos (si habían desaparecido, se reactivan).
@@ -101,8 +102,7 @@ class CrypticSynchronizer
 
     @seen_ids << source_id
     cryptic = Cryptic.find_or_initialize_by(source_id:)
-    cryptic.assign_attributes(FIELD_MAP.to_h { |field, column| [ column, item[field] ] }.merge(active: true))
-    cryptic.origin = origin if cryptic.new_record?
+    cryptic.assign_attributes(FIELD_MAP.to_h { |field, column| [ column, item[field] ] }.merge(active: true, origin:))
     persist(cryptic)
   end
 
