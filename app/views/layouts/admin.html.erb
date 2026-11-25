@@ -39,6 +39,7 @@
               <% end %>
             </ul>
             <div class="d-flex align-items-center gap-3">
+              <%= render "shared/theme_toggle" %>
               <span class="navbar-text small"><%= Current.user.email_address %></span>
               <%= button_to "Salir", session_path, method: :delete, class: "btn btn-outline-light btn-sm" %>
             </div>
