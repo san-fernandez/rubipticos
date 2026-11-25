@@ -1,0 +1,24 @@
+<% content_for :title, "Cómo se juega" %>
+<% content_for :without_chatbot_panel, true %>
+
+<%# Todo va dentro del frame "chatbot": los links de las opciones reemplazan
+    solo este pedazo de la página (el panel del layout o esta misma página). %>
+<%= turbo_frame_tag "chatbot" do %>
+  <div class="chatbot d-flex flex-column gap-3" aria-live="polite">
+    <div class="d-flex gap-2 align-items-start">
+      <span class="fs-4 lh-1" aria-hidden="true"><i class="bi bi-robot"></i></span>
+      <div class="bg-body-secondary rounded-3 px-3 py-2">
+        <p class="mb-0"><%= @node.message %></p>
+      </div>
+    </div>
+
+    <%= render "chatbots/example", node: @node %>
+
+    <div class="d-flex flex-wrap gap-2">
+      <% @node.options.each do |option| %>
+        <%= link_to option.text, chatbot_path(node: option.target),
+                    class: "btn btn-sm #{option.target == ChatbotTree::ROOT ? "btn-outline-secondary" : "btn-outline-primary"}" %>
+      <% end %>
+    </div>
+  </div>
+<% end %>

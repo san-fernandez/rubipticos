@@ -1,0 +1,18 @@
+<%# Ejemplo inventado de un nodo, con la solución escondida en un <details> (sin JavaScript). %>
+<% if node.example %>
+  <div class="card border-primary-subtle">
+    <div class="card-body py-2">
+      <p class="small text-body-secondary mb-1">Ejemplo inventado:</p>
+      <p class="fst-italic mb-1">«<%= node.example %>»</p>
+      <% if node.example_answer || node.explanation %>
+        <details>
+          <summary class="small">Ver la solución</summary>
+          <p class="small mb-0 mt-1">
+            <% if node.example_answer %><strong><%= node.example_answer %></strong>. <% end %>
+            <%= node.explanation %>
+          </p>
+        </details>
+      <% end %>
+    </div>
+  </div>
+<% end %>
