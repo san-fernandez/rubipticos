@@ -75,3 +75,12 @@ es:
       role:
         admin: "Administrador"
         score_editor: "Editor de puntajes"
+  help:
+    sections:
+      what_is: "¿Qué es un críptico?"
+      parts: "Las partes de un enunciado"
+      attempts: "La partida: intentos y rendirse"
+      hints: "Pistas"
+      scoring: "Puntaje"
+      streaks: "Rachas"
+      daily: "Críptico del día"
