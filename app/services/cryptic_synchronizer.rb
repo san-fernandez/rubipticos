@@ -8,7 +8,8 @@ require "net/http"
 #
 # Reglas:
 # - GET con timeout de 10 s. Si falla la red o el JSON no sirve, no se toca nada.
-# - Si la versión es la misma que la última sincronización exitosa: "Sin cambios".
+# - Si la versión y la URL son las mismas que en la última sincronización exitosa:
+#   "Sin cambios". Si cambia cualquiera de las dos, se vuelve a sincronizar.
 # - Cada críptico se identifica por su id de la fuente: se crea o se actualiza.
 #   Su origen es el host de la URL de la última sincronización que lo trajo.
 # - Un críptico inválido (o con id repetido) se saltea y se informa con su motivo.
@@ -45,12 +46,12 @@ class CrypticSynchronizer
   def call
     catalog = fetch_catalog
     version = catalog.fetch("version")
-    return log!(status: "unchanged", version:) if version == Setting.current.last_synced_version
+    return log!(status: "unchanged", version:) if already_synced?(version)
 
     ActiveRecord::Base.transaction do
       catalog.fetch("cripticos").each { |item| import(item) }
       @counts[:deactivated] = Cryptic.active.where.not(source_id: @seen_ids).update_all(active: false)
-      Setting.current.update!(last_synced_version: version)
+      Setting.current.update!(last_synced_version: version, last_synced_url: @url)
     end
     log!(status: "ok", version:)
   rescue FetchError => e
@@ -59,6 +60,11 @@ class CrypticSynchronizer
   end
 
   private
+
+  def already_synced?(version)
+    setting = Setting.current
+    version == setting.last_synced_version && @url == setting.last_synced_url
+  end
 
   def fetch_catalog
     response = http_get(parsed_url)
