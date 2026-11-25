@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_18_013345) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_25_194306) do
   create_table "blocked_names", force: :cascade do |t|
     t.string "term", null: false
     t.datetime "created_at", null: false
@@ -71,6 +71,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_18_013345) do
     t.datetime "leaderboard_reset_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "last_synced_url"
   end
 
   create_table "sync_logs", force: :cascade do |t|
