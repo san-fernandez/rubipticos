@@ -28,7 +28,7 @@ Rails.application.routes.draw do
     resources :cryptics, only: %i[index show update]
     resources :syncs,    only: %i[index create]
     resources :type_scores, :difficulty_settings, only: %i[index update]
-    resources :users
+    resources :users, except: %i[show destroy]   # no se borran: se desactivan desde update
     resources :players, only: %i[index update] do
       collection { post :reset_leaderboard }
     end
