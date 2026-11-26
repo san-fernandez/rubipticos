@@ -36,6 +36,7 @@ class CrypticSynchronizerTest < ActiveSupport::TestCase
     assert_equal 34, Cryptic.active.count
     assert_equal @admin, log.user
     assert_equal "2026-10-26.1", Setting.current.last_synced_version
+    assert_equal URL, Setting.current.last_synced_url
     assert_equal [ "catalogo.test" ], Cryptic.origins
   end
 
@@ -48,6 +49,21 @@ class CrypticSynchronizerTest < ActiveSupport::TestCase
     assert log.unchanged?
     assert_equal 34, Cryptic.count
     assert_match "Sin cambios", log.summary
+  end
+
+  test "con la misma versión pero otra URL vuelve a sincronizar y cambia el origen" do
+    stub_catalog({ version: "v1", cripticos: [ item("cr-1") ] }.to_json)
+    sync
+    fork_url = "http://localhost:8000/cryptics.json"
+    stub_request(:get, fork_url).to_return(body: { version: "v1", cripticos: [ item("cr-1"), item("cr-2") ] }.to_json)
+
+    log = CrypticSynchronizer.call(user: @admin, url: fork_url)
+
+    assert log.ok?, log.summary
+    assert_equal [ 1, 1 ], [ log.created_count, log.updated_count ]
+    assert_equal 2, Cryptic.count
+    assert_equal [ "localhost:8000" ], Cryptic.origins
+    assert_equal fork_url, Setting.current.last_synced_url
   end
 
   test "con una versión nueva actualiza solo los que cambiaron, sin duplicar" do
