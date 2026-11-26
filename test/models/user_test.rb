@@ -28,4 +28,39 @@ class UserTest < ActiveSupport::TestCase
     assert_not user.valid?
     assert_raises(ActiveRecord::StatementInvalid) { user.update_column(:role, "superadmin") }
   end
+
+  test "no se puede desactivar ni degradar al último admin activo" do
+    admin = users(:admin) # en los fixtures es el único admin activo
+
+    assert_not admin.update(active: false)
+    assert_includes admin.errors[:base], "Tiene que quedar al menos un administrador activo."
+    assert_not admin.reload.update(role: "score_editor")
+  end
+
+  test "con otro admin activo, sí se puede desactivar" do
+    users(:inactive).update!(active: true)
+
+    assert users(:admin).update(active: false)
+  end
+
+  test "un admin no puede desactivarse ni quitarse el rol a sí mismo" do
+    admin = users(:admin)
+    users(:inactive).update!(active: true) # que no sea el último admin
+    Current.session = admin.sessions.create!
+
+    assert_not admin.update(active: false)
+    assert_includes admin.errors[:base], "No podés desactivarte ni quitarte el rol de administrador a vos mismo."
+    assert_not admin.reload.update(role: "score_editor")
+  ensure
+    Current.reset
+  end
+
+  test "al desactivarlo se cierran sus sesiones" do
+    editor = users(:editor)
+    editor.sessions.create!
+
+    assert_difference -> { editor.sessions.count }, -1 do
+      editor.update!(active: false)
+    end
+  end
 end

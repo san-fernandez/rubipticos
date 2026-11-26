@@ -1,0 +1,9 @@
+<%# Paginado de kaminari con el mismo estilo que el listado de crípticos.
+    records: la colección paginada (.page(...).per(...)). %>
+<% if records.total_pages > 1 %>
+  <nav class="d-flex justify-content-between align-items-center" aria-label="Paginado">
+    <%= link_to_prev_page records, "← Anteriores", class: "btn btn-outline-secondary btn-sm" %>
+    <span class="small text-body-secondary">Página <%= records.current_page %> de <%= records.total_pages %></span>
+    <%= link_to_next_page records, "Siguientes →", class: "btn btn-outline-secondary btn-sm" %>
+  </nav>
+<% end %>

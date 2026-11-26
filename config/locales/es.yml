@@ -61,6 +61,9 @@ es:
         error_message: "Error"
     errors:
       models:
+        user:
+          cannot_lose_admin_self: "No podés desactivarte ni quitarte el rol de administrador a vos mismo."
+          last_active_admin: "Tiene que quedar al menos un administrador activo."
         player:
           attributes:
             name:

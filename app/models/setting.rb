@@ -12,4 +12,11 @@ class Setting < ApplicationRecord
   def self.current
     first_or_create!(source_url: DEFAULT_SOURCE_URL, welcome_text: DEFAULT_WELCOME_TEXT)
   end
+
+  # Reiniciar la tabla de posiciones NO borra partidas: guarda desde cuándo
+  # se cuenta. El ranking (P3) solo suma partidas resueltas después de esta
+  # fecha; el historial de cada jugador queda intacto.
+  def reset_leaderboard!
+    update!(leaderboard_reset_at: Time.current)
+  end
 end

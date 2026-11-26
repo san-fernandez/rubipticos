@@ -1,0 +1,6 @@
+<% content_for :title, "Editar usuario" %>
+
+<div class="col-12 col-lg-8">
+  <h1 class="h3 mb-3">Editar <%= @user.email_address_in_database %></h1>
+  <%= render "form", user: @user %>
+</div>

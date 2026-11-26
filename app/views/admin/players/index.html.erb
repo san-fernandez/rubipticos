@@ -1,0 +1,65 @@
+<% content_for :title, "Jugadores" %>
+
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+  <h1 class="h3 mb-0">Jugadores</h1>
+  <%= link_to "Términos bloqueados", admin_blocked_names_path, class: "btn btn-outline-primary btn-sm" %>
+</div>
+
+<%= render "leaderboard_reset", reset_at: @leaderboard_reset_at %>
+
+<%= form_with url: admin_players_path, method: :get, class: "row g-2 align-items-end mb-3" do |form| %>
+  <div class="col-12 col-sm">
+    <%= form.label :q, "Buscar por nombre", class: "form-label small" %>
+    <%= form.search_field :q, value: @query, class: "form-control form-control-sm" %>
+  </div>
+  <div class="col-12 col-sm-auto d-flex gap-2">
+    <%= form.submit "Buscar", name: nil, class: "btn btn-primary btn-sm" %>
+    <%= link_to "Limpiar", admin_players_path, class: "btn btn-outline-secondary btn-sm" %>
+  </div>
+<% end %>
+
+<p class="text-body-secondary small mb-2"><%= pluralize(@players.total_count, "jugador", plural: "jugadores") %></p>
+
+<div class="table-responsive">
+  <table class="table table-sm table-hover align-middle">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th class="text-end">Puntos</th>
+        <th class="text-end">Racha actual</th>
+        <th class="text-end">Mejor racha</th>
+        <th class="text-end">Partidas</th>
+        <th>Estado</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @players.each do |player| %>
+        <tr id="<%= dom_id(player) %>">
+          <td><%= player.name %></td>
+          <%# Puntos y partidas dependen de Game (P2) y del puntaje (P3): se completan cuando estén. %>
+          <td class="text-end">—</td>
+          <td class="text-end"><%= player.current_streak %></td>
+          <td class="text-end"><%= player.best_streak %></td>
+          <td class="text-end">—</td>
+          <td>
+            <span class="badge <%= player.blocked? ? "text-bg-danger" : "text-bg-success" %>">
+              <%= player.blocked? ? "Bloqueado" : "Activo" %>
+            </span>
+          </td>
+          <td>
+            <div class="d-flex flex-wrap gap-2 justify-content-end">
+              <%= render "block_actions", player: %>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<% if @players.empty? %>
+  <p class="text-body-secondary">No hay jugadores<%= " con ese nombre" if @query.present? %>.</p>
+<% end %>
+
+<%= render "admin/shared/pagination", records: @players %>
