@@ -1,0 +1,35 @@
+<% content_for :title, "Puntos por tipo" %>
+
+<h1 class="h3 mb-2">Puntos por tipo de críptico</h1>
+<p class="text-body-secondary mb-4">
+  Cada tipo vale entre <%= TypeScore::MIN_POINTS %> y <%= TypeScore::MAX_POINTS %> puntos.
+  La base de un críptico es <strong>puntos del tipo × multiplicador de la dificultad</strong>.
+  Los cambios solo afectan a las partidas que se resuelvan después: las ya resueltas conservan sus puntos.
+</p>
+
+<div class="table-responsive">
+  <table class="table table-sm align-middle">
+    <thead>
+      <tr>
+        <th>Tipo</th>
+        <th>Puntos</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @type_scores.each do |type_score| %>
+        <% label = Cryptic::TYPE_LABELS[type_score.cryptic_type] %>
+        <tr>
+          <td><%= label %></td>
+          <td>
+            <%= form_with model: [ :admin, type_score ], class: "d-flex gap-2" do |form| %>
+              <%= form.label :points, "Puntos de #{label}", class: "visually-hidden" %>
+              <%= form.number_field :points, min: TypeScore::MIN_POINTS, max: TypeScore::MAX_POINTS, step: 1,
+                                    required: true, class: "form-control form-control-sm", style: "max-width: 8rem" %>
+              <%= form.submit "Guardar", class: "btn btn-sm btn-primary" %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
