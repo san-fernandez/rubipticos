@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_25_194306) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_26_140001) do
   create_table "blocked_names", force: :cascade do |t|
     t.string "term", null: false
     t.datetime "created_at", null: false
@@ -40,6 +40,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_25_194306) do
     t.index ["source_id"], name: "index_cryptics_on_source_id", unique: true
     t.check_constraint "cryptic_type IN ('anagrama', 'oculta', 'charada', 'contenedor', 'inversion', 'supresion', 'homofono', 'doble_definicion', 'iniciales', 'finales', 'sustitucion', 'simbolos', 'combinada')", name: "cryptics_type_check"
     t.check_constraint "difficulty IN ('facil', 'medio', 'avanzado')", name: "cryptics_difficulty_check"
+  end
+
+  create_table "difficulty_settings", force: :cascade do |t|
+    t.string "difficulty", null: false
+    t.decimal "multiplier", precision: 4, scale: 2, null: false
+    t.integer "reference_seconds", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["difficulty"], name: "index_difficulty_settings_on_difficulty", unique: true
+    t.check_constraint "difficulty IN ('facil', 'medio', 'avanzado')", name: "difficulty_settings_difficulty_check"
+    t.check_constraint "multiplier > 0 AND multiplier <= 5", name: "difficulty_settings_multiplier_check"
+    t.check_constraint "reference_seconds > 0", name: "difficulty_settings_reference_seconds_check"
   end
 
   create_table "players", force: :cascade do |t|
@@ -88,6 +100,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_25_194306) do
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_sync_logs_on_user_id"
     t.check_constraint "status IN ('ok', 'unchanged', 'failed')", name: "sync_logs_status_check"
+  end
+
+  create_table "type_scores", force: :cascade do |t|
+    t.string "cryptic_type", null: false
+    t.integer "points", default: 100, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cryptic_type"], name: "index_type_scores_on_cryptic_type", unique: true
+    t.check_constraint "cryptic_type IN ('anagrama', 'oculta', 'charada', 'contenedor', 'inversion', 'supresion', 'homofono', 'doble_definicion', 'iniciales', 'finales', 'sustitucion', 'simbolos', 'combinada')", name: "type_scores_type_check"
+    t.check_constraint "points BETWEEN 10 AND 1000", name: "type_scores_points_check"
   end
 
   create_table "users", force: :cascade do |t|
