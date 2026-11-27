@@ -1,0 +1,37 @@
+<% content_for :title, "Multiplicadores" %>
+
+<h1 class="h3 mb-2">Multiplicadores por dificultad</h1>
+<p class="text-body-secondary mb-4">
+  El multiplicador tiene que ser mayor que 0 y como máximo <%= DifficultySetting::MAX_MULTIPLIER %>.
+  La base de un críptico es <strong>puntos del tipo × multiplicador de la dificultad</strong>.
+  Los cambios solo afectan a las partidas que se resuelvan después: las ya resueltas conservan sus puntos.
+</p>
+
+<div class="table-responsive">
+  <table class="table table-sm align-middle">
+    <thead>
+      <tr>
+        <th>Dificultad</th>
+        <th>Multiplicador</th>
+        <th>Tiempo de referencia</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @difficulty_settings.each do |difficulty_setting| %>
+        <% label = Cryptic::DIFFICULTY_LABELS[difficulty_setting.difficulty] %>
+        <tr>
+          <td><%= label %></td>
+          <td>
+            <%= form_with model: [ :admin, difficulty_setting ], class: "d-flex gap-2" do |form| %>
+              <%= form.label :multiplier, "Multiplicador de #{label}", class: "visually-hidden" %>
+              <%= form.number_field :multiplier, min: 0.01, max: DifficultySetting::MAX_MULTIPLIER, step: 0.01,
+                                    required: true, class: "form-control form-control-sm", style: "max-width: 8rem" %>
+              <%= form.submit "Guardar", class: "btn btn-sm btn-primary" %>
+            <% end %>
+          </td>
+          <td><%= difficulty_setting.reference_seconds %> segundos</td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
